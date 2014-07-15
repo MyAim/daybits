@@ -7,71 +7,38 @@ import com.aliyun.odps.udf.UDAFEvaluator;
 
 public class DayBitsMerge extends UDAF {
 
-	public static class DateBitsMergeEvaluator implements UDAFEvaluator {
-		private DayBits daybits;
+    public static class DateBitsMergeEvaluator implements UDAFEvaluator {
 
-		@Override
-		public void init() {
-		    daybits = new DayBits();
-		}
+        private DayBits daybits;
 
-		public void iterate(String text) {
-		    if (text == null || text.isEmpty()) {
-		        return;
-		    }
-		    
-            DayBits other = DayBitsUtils.parse(text);
-			daybits.merge(other);
-		}
+        @Override
+        public void init() {
+            daybits = new DayBits();
+        }
 
-		public void merge(String pr) {
-		    if (pr == null || pr.isEmpty()) {
-                return;
-            }
-            
+        public void iterate(String text) {
+            merge(text);
+        }
+
+        public void merge(String pr) {
             DayBits prDaybits = DayBitsUtils.parse(pr);
             if (this.daybits != null) {
                 this.daybits.merge(prDaybits);
             } else {
                 this.daybits = prDaybits;
             }
-		}
+        }
 
-	     public String terminatePartial() {
-	            if (daybits == null) {
-	                return null;
-	            }
-	            
-	            String text = daybits.toString();
-	            
-	            if (text.isEmpty()) {
-	                return null;
-	            }
-	            
-	            return text;
-	        }
+        public String terminatePartial() {
+            return DayBitsUtils.toString(daybits);
+        }
 
-	        public String terminate() {
-	            if (daybits == null) {
-	                return null;
-	            }
-	            
-	            String text = daybits.toString();
-	            
-	            if (text.isEmpty()) {
-	                return null;
-	            }
-	            
-	            return text;
-	        }
+        public String terminate() {
+            return DayBitsUtils.toString(daybits);
+        }
 
-	        public void setPartial(String pr) {
-	            if (pr == null || pr.isEmpty()) {
-	                this.daybits = new DayBits();
-	                return;
-	            }
-	            
-	            this.daybits = DayBitsUtils.parse(pr);
-	        }
-	    }
+        public void setPartial(String pr) {
+            merge(pr);
+        }
+    }
 }

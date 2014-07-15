@@ -8,11 +8,7 @@ import com.aliyun.odps.udf.UDF;
 public class DayBitsOr extends UDF {
 
     public String evaluate(String a, String b) {
-        DayBits daybits_a = DayBitsUtils.parse(a);
-        DayBits daybits_b = DayBitsUtils.parse(b);
-        
-        DayBits daybits_ab = DayBitsUtils.or(daybits_a, daybits_b);
-        return DayBitsUtils.toString(daybits_ab);
+        return DayBitsUtils.or(a, b);
     }
 
     public String evaluate(String a, String b, String c) {

@@ -6,7 +6,8 @@ import com.aliyun.odps.udf.UDAF;
 import com.aliyun.odps.udf.UDAFEvaluator;
 
 public class DayBitsConcat extends UDAF {
-    public static class DateBitsMergeEvaluator implements UDAFEvaluator {
+
+    public static class DateBitsConcatEvaluator implements UDAFEvaluator {
 
         private DayBits daybits;
 
@@ -16,14 +17,14 @@ public class DayBitsConcat extends UDAF {
         }
 
         public void iterate(String date) {
+            if (daybits == null) {
+                daybits = new DayBits();
+            }
+            
             daybits.set(date, true);
         }
 
         public void merge(String pr) {
-            if (pr == null || pr.isEmpty()) {
-                return;
-            }
-            
             DayBits prDaybits = DayBitsUtils.parse(pr);
             if (this.daybits != null) {
                 this.daybits.merge(prDaybits);
@@ -33,40 +34,15 @@ public class DayBitsConcat extends UDAF {
         }
 
         public String terminatePartial() {
-            if (daybits == null) {
-                return null;
-            }
-            
-            String text = daybits.toString();
-            
-            if (text.isEmpty()) {
-                return null;
-            }
-            
-            return text;
+            return DayBitsUtils.toString(daybits);
         }
 
         public String terminate() {
-            if (daybits == null) {
-                return null;
-            }
-            
-            String text = daybits.toString();
-            
-            if (text.isEmpty()) {
-                return null;
-            }
-            
-            return text;
+            return DayBitsUtils.toString(daybits);
         }
 
         public void setPartial(String pr) {
-            if (pr == null || pr.isEmpty()) {
-                this.daybits = new DayBits();
-                return;
-            }
-            
-            this.daybits =  DayBitsUtils.parse(pr);
+            merge(pr);
         }
     }
 }

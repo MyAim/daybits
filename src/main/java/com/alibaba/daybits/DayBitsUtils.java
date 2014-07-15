@@ -254,6 +254,14 @@ public class DayBitsUtils {
             return compact_years(years_b);
         }
     }
+    
+    public static String or(String a, String b) {
+        DayBits daybits_a = DayBitsUtils.parse(a);
+        DayBits daybits_b = DayBitsUtils.parse(b);
+        
+        DayBits daybits_ab = DayBitsUtils.or(daybits_a, daybits_b);
+        return toString(daybits_ab);
+    }
 
     public static DayBits or(DayBits a, DayBits b) {
         if (a == null && b == null) {
