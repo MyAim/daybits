@@ -3,6 +3,7 @@ package com.alibaba.daybits.bvt;
 import org.junit.Assert;
 
 import com.alibaba.daybits.DayBits;
+import com.alibaba.daybits.DayBitsUtils;
 
 import junit.framework.TestCase;
 
@@ -167,5 +168,14 @@ public class DayBitsTest_1 extends TestCase {
         Assert.assertTrue(daybits.set(20140709));
 
         System.out.println(daybits.toString());
+        
+        System.out.println(DayBitsUtils.parse("AAEAAAAAAAAg,IAAAgAgAAIA=,QAAAAoAIQJiAAFAB,CDCAAAAAgQQCARA=;AKAUACAAEKAAUA==,EAgAAA4SAIAIBp4=,oAAAAgAQAIIiEAgC,AAgB;AEA=,,AAAAAAQ=,AAAAAAAAAAAmCCA=#IIGAEAAAECEgAw==,YAAAAAgAAKAgBlg=,QABAAAEARgi4KEED,AFEBAIQBmikAIREI;MKsEAACgEAJiQIU=,EoJEAQaaAKAoApY=,sgEAAAAQAAICAAg=,AAgB;AEA=,,,AAAAAAAAAAAiCCA=").explain());
+
+        System.out.println();
+        System.out.println();
+        System.out.println(DayBitsUtils.parse("IIGAEAAAECEgAw==").explain());
+        System.out.println(DayBitsUtils.parse("IICAEAAAECEAAw==").explain());
+        System.out.println(DayBitsUtils.parse(",YAAAAAgAAKAgBlg=").explain());
+        System.out.println(DayBitsUtils.parse(",QAAAAAAAACAgBlg=").explain());
     }
 }

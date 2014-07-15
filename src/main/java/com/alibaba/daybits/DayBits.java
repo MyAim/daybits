@@ -43,12 +43,11 @@ public class DayBits {
     }
 
     protected int mergeYears(DayBits o) {
+        if (o.years == null) {
+            return 0;
+        }
 
         if (this.years == null) {
-            if (o.years == null) {
-                return 0;
-            }
-
             int changed = 0;
             this.years = o.years;
             for (Year year : o.years) {
@@ -59,10 +58,6 @@ public class DayBits {
             }
 
             return changed;
-        }
-
-        if (o.years == null) {
-            return 0;
         }
 
         int changed = 0;
@@ -92,12 +87,11 @@ public class DayBits {
     }
 
     protected int mergeBeforeYears(DayBits o) {
+        if (o.beforeYears == null) {
+            return 0;
+        }
 
         if (this.beforeYears == null) {
-            if (o.beforeYears == null) {
-                return 0;
-            }
-
             int changed = 0;
             this.beforeYears = o.beforeYears;
             for (Year year : o.beforeYears) {
@@ -108,10 +102,6 @@ public class DayBits {
             }
 
             return changed;
-        }
-
-        if (o.beforeYears == null) {
-            return 0;
         }
 
         int changed = 0;
@@ -320,7 +310,7 @@ public class DayBits {
 
         boolean changed = year.set(dateValue, value);
 
-        if (changed) {
+        if (changed && !value) {
             if (yearIndex >= 0) {
                 this.years = DayBitsUtils.compact_years(years);
             } else {
@@ -332,21 +322,21 @@ public class DayBits {
     }
 
     public String explain(String start, String end) {
-        return explain(start(start), end(end));
+        return explain(start(start), end(end), ',');
     }
 
     public String explain(Long start, Long end) {
-        return explain(start(start), end(end));
+        return explain(start(start), end(end), ',');
     }
 
-    public String explain(int start, int end) {
+    public String explain(int start, int end, char seperator) {
         StringBuilder buf = new StringBuilder();
 
         if (beforeYears != null) {
             for (int i = beforeYears.size() - 1; i >= 0; --i) {
                 Year year = beforeYears.get(i);
                 if (year != null) {
-                    year.explain(buf, 2012 - i, start, end);
+                    year.explain(buf, seperator, 2012 - i, start, end);
                 }
             }
         }
@@ -355,7 +345,7 @@ public class DayBits {
             for (int i = 0; i < years.size(); ++i) {
                 Year year = years.get(i);
                 if (year != null) {
-                    year.explain(buf, 2013 + i, start, end);
+                    year.explain(buf, seperator, 2013 + i, start, end);
                 }
             }
         }
@@ -370,7 +360,7 @@ public class DayBits {
             for (int i = beforeYears.size() - 1; i >= 0; --i) {
                 Year year = beforeYears.get(i);
                 if (year != null) {
-                    year.explain(buf, 2012 - i);
+                    year.explain(buf, ',', 2012 - i);
                 }
             }
         }
@@ -379,7 +369,7 @@ public class DayBits {
             for (int i = 0; i < years.size(); ++i) {
                 Year year = years.get(i);
                 if (year != null) {
-                    year.explain(buf, 2013 + i);
+                    year.explain(buf, ',', 2013 + i);
                 }
             }
         }
@@ -456,13 +446,12 @@ public class DayBits {
                     year.output(buf);
                 }
             }
-        }
-
-        if (years != null) {
             if (buf.length() > 0) {
                 buf.append('#');
             }
+        }
 
+        if (years != null) {
             for (int i = 0; i < years.size(); ++i) {
                 if (i != 0) {
                     buf.append(';');
@@ -562,78 +551,70 @@ public class DayBits {
         }
 
         protected int mergeWinter(Year o) {
+            if (o.winter == null) {
+                return 0;
+            }
+
             int changed = 0;
             if (winter == null) {
-                if (o.winter == null) {
-                    return changed;
-                }
-
                 this.winter = o.winter;
                 changed += o.winter.count();
                 return changed;
             }
 
-            if (o.winter != null) {
-                changed += this.winter.merge(o.winter);
-            }
+            changed += this.winter.merge(o.winter);
 
             return changed;
         }
 
         protected int mergeAutumn(Year o) {
+            if (o.autumn == null) {
+                return 0;
+            }
+
             int changed = 0;
             if (autumn == null) {
-                if (o.autumn == null) {
-                    return changed;
-                }
-
                 this.autumn = o.autumn;
                 changed += o.autumn.count();
                 return changed;
             }
 
-            if (o.autumn != null) {
-                changed += this.autumn.merge(o.autumn);
-            }
+            changed += this.autumn.merge(o.autumn);
 
             return changed;
         }
 
         protected int mergeSummer(Year o) {
+            if (o.summer == null) {
+                return 0;
+            }
+
             int changed = 0;
 
             if (summer == null) {
-                if (o.summer == null) {
-                    return changed;
-                }
-
                 this.summer = o.summer;
                 changed += o.summer.count();
                 return changed;
             }
 
-            if (o.summer != null) {
-                changed += this.summer.merge(o.summer);
-            }
+            changed += this.summer.merge(o.summer);
 
             return changed;
         }
 
         protected int mergeSpring(Year o) {
+            if (o.spring == null) {
+                return 0;
+            }
+
             int changed = 0;
             if (spring == null) {
-                if (o.spring == null) {
-                    return changed;
-                }
-
                 this.spring = o.spring;
                 changed += o.spring.count();
                 return changed;
             }
 
-            if (o.spring != null) {
-                changed += this.spring.merge(o.spring);
-            }
+            changed += this.spring.merge(o.spring);
 
             return changed;
         }
@@ -773,32 +754,33 @@ public class DayBits {
             return quarter.get(dayOfQuarter);
         }
 
-        public void explain(StringBuilder out, int year, int start, int end) {
-            explain(out, year, 0, spring, start, end);
-            explain(out, year, 1, summer, start, end);
-            explain(out, year, 2, autumn, start, end);
-            explain(out, year, 3, winter, start, end);
+        public void explain(StringBuilder out, char seperator, int year, int start, int end) {
+            explain(out, seperator, year, 0, spring, start, end);
+            explain(out, seperator, year, 1, summer, start, end);
+            explain(out, seperator, year, 2, autumn, start, end);
+            explain(out, seperator, year, 3, winter, start, end);
         }
 
-        public void explain(StringBuilder out, int year) {
-            explain(out, year, 0, spring);
-            explain(out, year, 1, summer);
-            explain(out, year, 2, autumn);
-            explain(out, year, 3, winter);
+        public void explain(StringBuilder out, char seperator, int year) {
+            explain(out, seperator, year, 0, spring);
+            explain(out, seperator, year, 1, summer);
+            explain(out, seperator, year, 2, autumn);
+            explain(out, seperator, year, 3, winter);
         }
 
-        private final void explain(StringBuilder out, int year, int quarterIndex, Quarter quarter) {
+        private final void explain(StringBuilder out, char seperator, int year, int quarterIndex, Quarter quarter) {
             if (quarter == null) {
                 return;
             }
-            quarter.explain(out, year, quarterIndex);
+            quarter.explain(out, seperator, year, quarterIndex);
         }
 
-        private final void explain(StringBuilder out, int year, int quarterIndex, Quarter quarter, int start, int end) {
+        private final void explain(StringBuilder out, char seperator, int year, int quarterIndex, Quarter quarter,
+                                   int start, int end) {
             if (quarter == null) {
                 return;
             }
-            quarter.explain(out, year, quarterIndex, start, end);
+            quarter.explain(out, seperator, year, quarterIndex, start, end);
         }
 
         public int first(int year, int start, int end) {
@@ -968,7 +950,7 @@ public class DayBits {
             // assert result.length() == resultLen;
         }
 
-        public void explain(StringBuilder out, int year, int quarterIndex) {
+        public void explain(StringBuilder out, char seperator, int year, int quarterIndex) {
             if (bytes == null) {
                 return;
             }
@@ -981,7 +963,7 @@ public class DayBits {
                         int dayOfQuarter = i * 8 + bitIndex;
                         int dateValue = DayBitsUtils.getDateValue(year, quarterIndex, dayOfQuarter);
                         if (out.length() > 0) {
-                            out.append(',');
+                            out.append(seperator);
                         }
                         out.append(dateValue);
                     }
@@ -989,7 +971,7 @@ public class DayBits {
             }
         }
 
-        public void explain(StringBuilder out, int year, int quarterIndex, int start, int end) {
+        public void explain(StringBuilder out, char seperator, int year, int quarterIndex, int start, int end) {
             if (bytes == null) {
                 return;
             }
@@ -1006,7 +988,7 @@ public class DayBits {
                         }
                         if (dateValue >= start && dateValue <= end) {
                             if (out.length() > 0) {
-                                out.append(',');
+                                out.append(seperator);
                             }
                             out.append(dateValue);
                         }
@@ -1147,24 +1129,24 @@ public class DayBits {
         }
 
         public int merge(Quarter o) {
-            if (this.bytes == null) {
-                if (o.bytes == null) {
-                    return 0;
-                }
+            if (o.bytes == null) {
+                return 0;
+            }
 
-                this.bytes = o.bytes;
-                return o.count();
+            if (this.bytes == null) {
+                this.bytes = Arrays.copyOf(o.bytes, o.bytes.length);
+                return this.count();
             }
 
             int count = this.count();
-            if (o.bytes != null) {
-                if (this.bytes.length < o.bytes.length) {
-                    this.bytes = Arrays.copyOf(this.bytes, o.bytes.length);
-                }
-                for (int i = 0; i < o.bytes.length; ++i) {
-                    this.bytes[i] |= o.bytes[i];
-                }
+
+            if (this.bytes.length < o.bytes.length) {
+                this.bytes = Arrays.copyOf(this.bytes, o.bytes.length); // expand
             }
+            for (int i = 0; i < o.bytes.length; ++i) {
+                this.bytes[i] |= o.bytes[i];
+            }
+
             return this.count() - count;
         }
     }

@@ -405,6 +405,10 @@ public class DayBitsUtils {
             if (ch == '#') {
                 daybits.beforeYears = daybits.years;
                 daybits.years = null;
+                if (pos == chars.length() - 1) {
+                    pos++;
+                    return null;
+                }
                 next();
             }
 
