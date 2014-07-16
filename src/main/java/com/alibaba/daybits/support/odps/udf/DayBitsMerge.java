@@ -38,7 +38,7 @@ public class DayBitsMerge extends UDAF {
         }
 
         public void setPartial(String pr) {
-            merge(pr);
+            this.daybits = DayBitsUtils.parse(pr);
         }
     }
 }
