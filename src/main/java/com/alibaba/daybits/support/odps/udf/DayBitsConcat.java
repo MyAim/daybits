@@ -20,7 +20,7 @@ public class DayBitsConcat extends UDAF {
             if (daybits == null) {
                 daybits = new DayBits();
             }
-            
+
             daybits.set(date, true);
         }
 
@@ -42,7 +42,7 @@ public class DayBitsConcat extends UDAF {
         }
 
         public void setPartial(String pr) {
-            merge(pr);
+            this.daybits = DayBitsUtils.parse(pr);
         }
     }
 }

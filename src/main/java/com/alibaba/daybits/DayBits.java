@@ -25,6 +25,11 @@ public class DayBits {
 
         years.add(year);
     }
+    
+    public void clear() {
+        this.beforeYears = null;
+        this.years = null;
+    }
 
     public void and(DayBits o) {
         this.beforeYears = DayBitsUtils.and(this.beforeYears, o.beforeYears);
