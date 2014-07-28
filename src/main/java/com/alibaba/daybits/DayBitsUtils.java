@@ -403,8 +403,8 @@ public class DayBitsUtils {
         
         Year parseYear() {
             if (ch == '#') {
-                daybits.beforeYears = daybits.years;
-                daybits.years = null;
+                daybits.setBeforeYears(daybits.getYears());
+                daybits.setYears(null);
                 if (pos == chars.length() - 1) {
                     pos++;
                     return null;

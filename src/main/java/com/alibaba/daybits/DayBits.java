@@ -12,12 +12,28 @@ public class DayBits {
     public final static int START = 19700101;
     public final static int END   = 23991231;
 
-    List<Year>              beforeYears;
-    List<Year>              years;
+    private List<Year>      beforeYears;
+    private List<Year>      years;
 
     public DayBits(){
     }
+    
+    public List<Year> getYears() {
+        return this.years;
+    }
 
+    void setYears(List<Year> years) {
+        this.years = years;
+    }
+
+    void setBeforeYears(List<Year> beforeYears) {
+        this.beforeYears = beforeYears;
+    }
+    
+    public List<Year> getBeforeYears() {
+        return this.beforeYears;
+    }
+    
     void add(Year year) {
         if (years == null) {
             years = new ArrayList<Year>(4);
@@ -25,7 +41,7 @@ public class DayBits {
 
         years.add(year);
     }
-    
+
     public void clear() {
         this.beforeYears = null;
         this.years = null;
