@@ -413,6 +413,11 @@ public class DayBitsUtils {
             }
 
             if (ch == ';') {
+                if (pos == chars.length() - 1) {
+                    pos++;
+                    return null;
+                }
+                
                 next();
                 return null;
             }
