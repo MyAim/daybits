@@ -5,6 +5,7 @@
 	<artifactId>daybits</artifactId>
 	<version>1.0.0</version>
 	<name>daybits</name>
+	<description>an date data format</description>
 
 	<url>https://github.com/alibaba/daybits</url>
 	<inceptionYear>2014</inceptionYear>
