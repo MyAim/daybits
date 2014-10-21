@@ -254,11 +254,11 @@ public class DayBitsUtils {
             return compact_years(years_b);
         }
     }
-    
+
     public static String or(String a, String b) {
         DayBits daybits_a = DayBitsUtils.parse(a);
         DayBits daybits_b = DayBitsUtils.parse(b);
-        
+
         DayBits daybits_ab = DayBitsUtils.or(daybits_a, daybits_b);
         return toString(daybits_ab);
     }
@@ -267,15 +267,15 @@ public class DayBitsUtils {
         if (a == null && b == null) {
             return null;
         }
-        
+
         if (a == null) {
             return b;
         }
-        
+
         if (b == null) {
             return a;
         }
-        
+
         a.merge(b);
         return a;
     }
@@ -324,18 +324,18 @@ public class DayBitsUtils {
 
         return years;
     }
-    
+
     public static String toString(DayBits daybits) {
         if (daybits == null) {
             return null;
         }
-        
+
         String text = daybits.toString();
-        
+
         if (text != null && text.isEmpty()) {
             return null;
         }
-        
+
         return text;
     }
 
@@ -344,9 +344,14 @@ public class DayBitsUtils {
             return null;
         }
         DayBitsParser parser = new DayBitsParser(text);
-        return parser.parse();
+
+        try {
+            return parser.parse();
+        } catch (RuntimeException ex) {
+            throw new IllegalArgumentException("illegal input : " + text, ex);
+        }
     }
-    
+
     public static class DayBitsParser {
 
         public static final char[] CA      = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
@@ -372,7 +377,13 @@ public class DayBitsUtils {
         }
 
         private void next() {
-            ch = chars.charAt(++pos);
+            if (pos < chars.length() - 1) {
+                ch = chars.charAt(++pos);
+            } else {
+                ++pos;
+                ch = '\0';
+            }
+
         }
 
         String read(char sep) {
@@ -400,7 +411,7 @@ public class DayBitsUtils {
             }
             return daybits;
         }
-        
+
         Year parseYear() {
             if (ch == '#') {
                 daybits.setBeforeYears(daybits.getYears());
@@ -417,7 +428,7 @@ public class DayBitsUtils {
                     pos++;
                     return null;
                 }
-                
+
                 next();
                 return null;
             }
@@ -476,7 +487,11 @@ public class DayBitsUtils {
             if (pos < chars.length()) {
                 ch = chars.charAt(pos);
                 if (ch == ',') {
-                    next();
+                    if (pos == chars.length() - 1) {
+                        pos++;
+                    } else {
+                        next();
+                    }
                 }
             } else {
                 eof = true;
@@ -549,31 +564,31 @@ public class DayBitsUtils {
         if (start == null || start.isEmpty()) {
             return START;
         }
-        
+
         return Integer.parseInt(start);
     }
-    
+
     static int start(Long start) {
         if (start == null) {
             return START;
         }
-        
+
         return start.intValue();
     }
-    
+
     static int end(String end) {
         if (end == null || end.isEmpty()) {
             return END;
         }
-        
+
         return Integer.parseInt(end);
     }
-    
+
     static int end(Long end) {
         if (end == null) {
             return END;
         }
-        
+
         return end.intValue();
     }
 }
